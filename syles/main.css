@@ -3,3 +3,6 @@
     justify-content: center;
     flex-wrap: nowrap;
 }
+.itens-menu a{
+    padding: 10px;
+}
