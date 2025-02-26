@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Form</title>
+</head>
+<body>
+    <form id="recipeForm">
+        <label for="name">Nome da Receita:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="ingredients">Ingredientes:</label>
+        <textarea id="ingredients" name="ingredients" required></textarea><br><br>
+        
+        <label for="instructions">Instruções:</label>
+        <textarea id="instructions" name="instructions" required></textarea><br><br>
+        
+        <button type="submit">Adicionar Receita</button>
+    </form>
+
+    <ul id="recipeList"></ul>
+
+    <script>
+        document.getElementById('recipeForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const ingredients = document.getElementById('ingredients').value;
+            const instructions = document.getElementById('instructions').value;
+            
+            if (name && ingredients && instructions) {
+                const recipeList = document.getElementById('recipeList');
+                
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${name}</strong><br>
+                                      <strong>Ingredientes:</strong> ${ingredients}<br>
+                                      <strong>Instruções:</strong> ${instructions}`;
+                
+                recipeList.appendChild(listItem);
+                
+                // Send data to the server to be added to the JSON file
+                const response = await fetch('/add-recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, ingredients, instructions }),
+                });
+
+                if (response.ok) {
+                    alert('Receita adicionada com sucesso!');
+                } else {
+                    alert('Erro ao adicionar receita.');
+                }
+                
+                document.getElementById('recipeForm').reset();
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        });
+    </script>
+</body>
+</html>
